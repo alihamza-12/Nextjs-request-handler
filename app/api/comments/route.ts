@@ -1,8 +1,27 @@
+import { NextRequest } from "next/server";
 import { comments } from "./data";
+//GET URL Query Parameter
+export async function GET(request : NextRequest) {
+    
+    const searchparams=request.nextUrl.searchParams
+    const query= searchparams.get('query');
+    console.log(query)
+    const filteredComments=query?comments.filter((comment)=>
+        comment.comment.toLowerCase().includes(query.toLowerCase())):comments
+    if (filteredComments.length===0) {
+     return Response.json(
+       { message: "Comment not found"},
+       { status: 404 }
+     )    
+   }
 
-export async function GET() {
-    return Response.json(comments)
+
+     return Response.json({
+    message: "Fetched comment",
+    filteredComments
+    });
 }
+
 
 export async function POST(request:Request){
     const {user ,comment} =await request.json();
