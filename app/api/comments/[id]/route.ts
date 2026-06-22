@@ -1,5 +1,6 @@
 import { comments } from "../data";
 //Dynamic Route
+//GET
 export async function GET(_request : Request , { params }: { params: Promise<{ id: string }> } ){
     const {id} =await  params
 
@@ -16,7 +17,7 @@ export async function GET(_request : Request , { params }: { params: Promise<{ i
     });
 }
 
-//PATCH request
+//PATCH 
 export async function PATCH(request: Request,{params}:{params : Promise<{id:string}>}){
     const {id}=await params;
     const body= await request.json()
@@ -34,7 +35,27 @@ export async function PATCH(request: Request,{params}:{params : Promise<{id:stri
 
 
     return Response.json({
-    message: "Fetched comment",
+    message: "Updated comment",
     comment:comments[index]
     });
+}
+
+//DELETE 
+export async function DELETE(_request:Request, {params}:{params:Promise<{id:string}>}) {
+ const {id}= await params;
+
+ const index=comments.findIndex((comment)=>comment.id===parseInt(id));
+ if (index === -1) {
+     return Response.json(
+       { message: "Comment not found"},
+       { status: 404 }
+     )    
+   }
+ const deletedComment=comments[index];
+ comments.splice(index,1);
+
+  return Response.json({
+    message: "DELETED comment ",
+    deletedComment
+  });
 }
